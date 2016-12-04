@@ -8,4 +8,21 @@ include('includes/content.php');
         <h1 class="text-center">Home page</h1>
     </div>
 
-<?php include('includes/footer.php'); ?>
+
+<?php
+
+$sql = "SELECT * FROM users";
+$result = query($sql);
+
+confirm($result);
+
+$row = fetch_array($result);
+
+echo $row['first_name'];
+
+?>
+
+
+<?php
+include('includes/footer.php');
+?>
