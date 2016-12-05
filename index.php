@@ -5,23 +5,9 @@ include('includes/content.php');
 ?>
 
     <div class="jumbotron">
-        <h1 class="text-center">Home page</h1>
+        <?php //display_message(); ?>
+        <h1 class="text-center"> Home </h1>
     </div>
-
-
-<?php
-
-$sql = "SELECT * FROM users";
-$result = query($sql);
-
-confirm($result);
-
-$row = fetch_array($result);
-
-echo $row['first_name'];
-
-?>
-
 
 <?php
 include('includes/footer.php');

@@ -1,0 +1,14 @@
+.panel-login {
+    border-color: #e3e3e3;
+}
+.panel-login a {
+    font-weight: bold;
+    color: #999999;
+}
+.panel-login a.active {
+    color: limegreen;
+    font-size: medium;
+}
+.panel-heading {
+    text-align: center;
+}
