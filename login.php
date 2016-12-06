@@ -32,22 +32,33 @@ include('includes/content.php');
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <form id="form-login" method="post" role="form">
+                            <form id="form-login" method="post" role="form" style="display: block;">
                                 <div class="form-group">
-                                    <input type="email" name="email" id="email-register" class="form-control" placeholder="Email" value="" required>
+                                    <input type="email" name="email" id="email-login" tabindex="1" class="form-control" placeholder="Email" value="" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+                                    <input type="password" name="password" id="password-login" tabindex="2" class="form-control" placeholder="Password" required>
                                 </div>
-                                <!-- remember me -->
+                                <div class="form-group text-center">
+                                    <input type="checkbox" tabindex="3" class="" name="remember" id="remember">
+                                    <label for="remember"> Remember me</label>
+                                </div>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit" name="submit-login" id="submit-login" class="form-control btn btn-primary text-uppercase" value="Login">
+                                            <input type="submit" name="submit-login" id="submit-login" tabindex="4" class="form-control btn btn-primary text-uppercase" value="Login">
                                         </div>
                                     </div>
                                 </div>
-                                <!-- forgot password -->
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="text-center">
+                                                <a href="recover.php" tabindex="5" class="forgot-password">Forgot Password?</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </form> <!-- /form -->
                         </div>
                     </div>
