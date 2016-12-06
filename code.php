@@ -5,10 +5,12 @@ include('includes/content.php');
 
 	<div class="row">
 		<div class="col-lg-6 col-lg-offset-3">
+			<div class="alert-placeholder">
 			<?php
 				display_message();
 				validate_code();
 			?>
+			</div>
 		</div>
 	</div>
 
@@ -39,7 +41,7 @@ include('includes/content.php');
 										</div>
 									</div>
 								</div>
-								<input type="hidden" class="hide" name="token" id="token" value="">
+
 							</form>
 						</div>
 					</div>

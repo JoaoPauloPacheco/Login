@@ -302,19 +302,35 @@ function validate_code(){
                 $result = query($sql);
 
                 if (row_count($result) == 1){
+                    setcookie('temp_code', $validation_code, time()+900); // 15 minutes.
                     redirect("reset.php?email=$email&code=$validation_code");
                 } else {
                     echo validation_errors("Sorry, wrong validation code. Please, try again.");
                 }
             }
         }
-
     } else {
         $text = "Sorry, your verification code has expired. Please, try again.";
         set_message(validation_errors($text));
         redirect("recover.php");
     }
-}
+} // end validate_code
 
+function reset_password(){
+    if (isset($_COOKIE['temp_code'])) {
+        if (isset($_GET['email']) && isset($_GET['code'])) {
+
+            if (isset($_SESSION['token']) && isset($_POST['token'])) {
+                if ($_SESSION['token'] === $_POST['token']) {
+                    $sql = "";
+                }
+            }
+        }
+    } else {
+        $text = "Sorry, your time has expired.";
+        set_message(validation_errors($text));
+        redirect("recover.php");
+    }
+} // end reset_password
 
 

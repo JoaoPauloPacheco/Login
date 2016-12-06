@@ -3,7 +3,14 @@ include('includes/header.php');
 include('includes/content.php');
 ?>
     <div class="row">
-
+        <div class="col-lg-6 col-lg-offset-3">
+            <div class="alert-placeholder">
+                <?php
+                    display_message();
+                    reset_password();
+                ?>
+            </div>
+        </div>
     </div>
 
     <div class="row">
