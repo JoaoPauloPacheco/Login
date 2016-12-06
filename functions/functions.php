@@ -72,14 +72,12 @@ function send_email($email, $subject, $msg, $headers){
 }
 
 
-/**************** Validation functions. *******************/
+/**************** Registration functions. *******************/
 
 function validate_registration_form(){
-
     $errors = [];
     $min = 2;
     $max = 20;
-
     if ($_SERVER['REQUEST_METHOD'] == "POST"){
         $first_name         = clean($_POST['first_name']);
         $last_name          = clean($_POST['last_name']);
@@ -87,7 +85,6 @@ function validate_registration_form(){
         $email              = clean($_POST['email']);
         $password           = clean($_POST['password']);
         $password_confirm   = clean($_POST['password_confirm']);
-
         // First Name errors.
         if (strlen($first_name) < $min){
             $errors[] = "Your First name cannot be less than {$min} characters.";
@@ -125,40 +122,37 @@ function validate_registration_form(){
             foreach ($errors as $error) {
                 echo validation_errors($error);
             }
-        } elseif (register_user($first_name, $last_name, $username, $email, $password)){
-            $text = "Please, check your email for activation link.";
-            set_message(validation_success($text));
-            display_message();
-        } else {
-            $text = "Sorry, the registration failed. Please, try again.";
-            set_message(validation_errors($text));
-            display_message();
+        } else{
+            if (register_user($first_name, $last_name, $username, $email, $password)){
+                $text = "Please, check your email for activation link.";
+                set_message(validation_success($text));
+                display_message();
+            } else {
+                $text = "Sorry, the registration failed. Please, try again.";
+                set_message(validation_errors($text));
+                display_message();
+            }
         }
-    } // POST request
-} // function validate_registration_form
-
-
-/**************** Registration functions. *******************/
+    } // POST
+} // end validate_registration_form
 
 function register_user($first_name, $last_name, $username, $email, $password){
-
     $first_name = escape($first_name);
     $last_name  = escape($last_name);
     $username   = escape($username);
     $email      = escape($email);
     $password   = escape($password);
-
     if (email_exists($email) || username_exists($username)){
         return false;
     } else {
         $password = md5($password); // hashing the password
-        $validation_code = md5($username + microtime()); // hashing the validation_code by using username
+        $validation_code = md5($username + microtime()); // creating the validation_code by using username
 
         $sql = "INSERT INTO users (first_name, last_name, username, email, password, validation_code, active, joined)";
         $sql.=  " VALUES ('$first_name', '$last_name', '$username', '$email', '$password', '$validation_code', 0, CURRENT_TIMESTAMP)";
         $result = query($sql);
         confirm($result);
-
+        // Sending email.
         $subject = "Account Confirmation";
         $msg = " <p><strong>Hey $first_name $last_name,</strong></p>
                 <p>We're ready to activate your account. All we need to do is make sure 
@@ -167,12 +161,10 @@ function register_user($first_name, $last_name, $username, $email, $password){
                 <p>If you didn't create an account in our website, just delete this email and 
                 everything will go back to the way in was.</p>";
         $headers = "From: noreply@mywebsite.com";
-
         send_email($email, $subject, $msg, $headers);
-
         return true;
     }
-} // register_user
+} // end register_user
 
 function activate_user(){
     if ($_SERVER['REQUEST_METHOD'] == "GET"){
@@ -184,14 +176,11 @@ function activate_user(){
             $sql.= "AND validation_code = '".escape($_GET['code'])."'";
             $result = query($sql);
             confirm($result);
-
             if(row_count($result) == 1) {
-
                 $sql2 ="UPDATE users SET active = 1, validation_code = 0 
                         WHERE email = '".escape($email)."' AND validation_code = '".escape($validation_code)."'";
                 $result2 = query($sql2);
                 confirm($result2);
-
                 $text = "Your account has been activated. Please, login.";
                 set_message(validation_success($text));
                 redirect("login.php");
@@ -200,42 +189,71 @@ function activate_user(){
                 set_message(validation_errors($text));
                 redirect("login.php");
             }
-
         } else {
 
         }
     }
-} // function activate_user
+} // end activate_user
 
 /**************** Login functions. *******************/
 
 function validate_login_form(){
     $errors = [];
-    $min = 2;
-    $max = 20;
-
     if ($_SERVER['REQUEST_METHOD'] == "POST"){
         $email      = clean($_POST['email']);
         $password   = clean($_POST['password']);
-
         if (empty($email)){
             $errors[] = "Please, type in your Email address.";
         }
         if (empty($password)){
             $errors[] = "Please, type in your Password.";
         }
-
         if(!empty($errors)){
             foreach ($errors as $error) {
                 echo validation_errors($error);
             }
+        } else {
+            if(login_user($email, $password)) {
+                redirect("admin.php");
+            } else {
+                echo validation_errors("Wrong Email or Password. Please, try again.");
+            }
+        }
+    }
+} // end validate_login_form
+
+function login_user($email, $password){
+    $sql = "SELECT id, password FROM users WHERE email = '".escape($email)."' AND active = 1";
+    $result = query($sql);
+    if(row_count($result) == 1){ // if the query returns a result - it has some data in it.
+        $row = fetch_array($result);
+        $db_password = $row['password'];
+        if(md5($password) === $db_password){
+            $_SESSION['email'] = $email;
+
+            return true;
         } else{
 
+            return false;
         }
 
 
+        return true;
+    } else{
 
+        return false;
+    }
+
+
+} // end login_user
+
+function logged_in(){
+    if (isset($_SESSION['email'])){
+
+        return true;
+    } else {
+
+        return false;
     }
 }
-
 
