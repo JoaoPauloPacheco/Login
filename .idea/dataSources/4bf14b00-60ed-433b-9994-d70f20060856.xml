@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="MySQL - login_db@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="2.6">
+    <schema id="1" name="login_db">
+      <visible>1</visible>
+    </schema>
+    <schema id="2" name="bitnami_magento"/>
+    <schema id="3" name="cdcol"/>
+    <schema id="4" name="chat"/>
+    <schema id="5" name="comments"/>
+    <schema id="6" name="feedback"/>
+    <schema id="7" name="information_schema"/>
+    <schema id="8" name="khizir"/>
+    <schema id="9" name="khizirDB"/>
+    <schema id="10" name="mysql"/>
+    <schema id="11" name="performance_schema"/>
+    <schema id="12" name="phpmyadmin"/>
+    <schema id="13" name="test"/>
+    <table id="14" parent="1" name="users"/>
+    <column id="15" parent="14" name="id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="16" parent="14" name="first_name">
+      <mandatory>1</mandatory>
+      <data-type>varchar(255)|0</data-type>
+    </column>
+    <column id="17" parent="14" name="last_name">
+      <mandatory>1</mandatory>
+      <data-type>varchar(255)|0</data-type>
+    </column>
+    <column id="18" parent="14" name="username">
+      <mandatory>1</mandatory>
+      <data-type>varchar(255)|0</data-type>
+    </column>
+    <column id="19" parent="14" name="email">
+      <mandatory>1</mandatory>
+      <data-type>varchar(255)|0</data-type>
+    </column>
+    <column id="20" parent="14" name="password">
+      <mandatory>1</mandatory>
+      <data-type>text|0</data-type>
+    </column>
+    <column id="21" parent="14" name="validation_code">
+      <mandatory>1</mandatory>
+      <data-type>text|0</data-type>
+    </column>
+    <column id="22" parent="14" name="active">
+      <mandatory>1</mandatory>
+      <data-type>tinyint(4)|0</data-type>
+      <default-expression>&apos;0&apos;</default-expression>
+    </column>
+    <column id="23" parent="14" name="joined">
+      <mandatory>1</mandatory>
+      <data-type>timestamp|0</data-type>
+      <default-expression>CURRENT_TIMESTAMP</default-expression>
+    </column>
+    <key id="24" parent="14" name="PRIMARY">
+      <columns>id</columns>
+      <primary>1</primary>
+    </key>
+  </database-model>
+</dataSource>

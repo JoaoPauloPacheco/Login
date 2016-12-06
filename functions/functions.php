@@ -31,16 +31,19 @@ function token_generator(){
 }
 
 function validation_errors($error){
-    return '<div class="alert alert-danger alert-dismissible" role="alert">
+    return '<div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <strong>Warning! </strong>' .$error. '
+                    <span aria-hidden="true">&times;</span></button>'.$error.'
             </div>';
 }
 
-function validation_message($message){
+function validation_success($success){
     return '<div class="alert alert-success" role="alert">
-                <strong>Thank you! </strong>' .$message. '
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <strong>Thank you! </strong>'.$success.'
             </div>';
 }
 
@@ -64,8 +67,8 @@ function username_exists($username){
     }
 }
 
-function send_email(){
-
+function send_email($email, $subject, $msg, $headers){
+    return mail($email, $subject, $msg, $headers);
 }
 
 
@@ -122,19 +125,20 @@ function validate_registration_form(){
             foreach ($errors as $error) {
                 echo validation_errors($error);
             }
+        } elseif (register_user($first_name, $last_name, $username, $email, $password)){
+            $text = "Please, check your email for activation link.";
+            set_message(validation_success($text));
+            display_message();
         } else {
-
-            if (register_user($first_name, $last_name, $username, $email, $password)){
-                $message = "Please, check your email for activation link.";
-                echo validation_message($message);
-                // или
-                //set_message("<p class='bg-success text-center'>Please, check your email for activation link.</p>");
-                //redirect("index.php");
-            }
+            $text = "Sorry, the registration failed. Please, try again.";
+            set_message(validation_errors($text));
+            display_message();
         }
-
     } // POST request
 } // function validate_registration_form
+
+
+/**************** Registration functions. *******************/
 
 function register_user($first_name, $last_name, $username, $email, $password){
 
@@ -152,10 +156,86 @@ function register_user($first_name, $last_name, $username, $email, $password){
 
         $sql = "INSERT INTO users (first_name, last_name, username, email, password, validation_code, active, joined)";
         $sql.=  " VALUES ('$first_name', '$last_name', '$username', '$email', '$password', '$validation_code', 0, CURRENT_TIMESTAMP)";
-
         $result = query($sql);
         confirm($result);
+
+        $subject = "Account Confirmation";
+        $msg = " <p><strong>Hey $first_name $last_name,</strong></p>
+                <p>We're ready to activate your account. All we need to do is make sure 
+                this is your email address.</p>
+                <a href='http://localhost/dev/login/activate.php?email=$email&code=$validation_code'><strong>Verify Address</strong></a>
+                <p>If you didn't create an account in our website, just delete this email and 
+                everything will go back to the way in was.</p>";
+        $headers = "From: noreply@mywebsite.com";
+
+        send_email($email, $subject, $msg, $headers);
 
         return true;
     }
 } // register_user
+
+function activate_user(){
+    if ($_SERVER['REQUEST_METHOD'] == "GET"){
+        if (isset($_GET['email'])){
+            $email = clean($_GET['email']);
+            $validation_code = clean($_GET['code']);
+
+            $sql = "SELECT id FROM users WHERE email = '".escape($_GET['email'])."' ";
+            $sql.= "AND validation_code = '".escape($_GET['code'])."'";
+            $result = query($sql);
+            confirm($result);
+
+            if(row_count($result) == 1) {
+
+                $sql2 ="UPDATE users SET active = 1, validation_code = 0 
+                        WHERE email = '".escape($email)."' AND validation_code = '".escape($validation_code)."'";
+                $result2 = query($sql2);
+                confirm($result2);
+
+                $text = "Your account has been activated. Please, login.";
+                set_message(validation_success($text));
+                redirect("login.php");
+            } else {
+                $text = "Sorry, your account could not be activated.";
+                set_message(validation_errors($text));
+                redirect("login.php");
+            }
+
+        } else {
+
+        }
+    }
+} // function activate_user
+
+/**************** Login functions. *******************/
+
+function validate_login_form(){
+    $errors = [];
+    $min = 2;
+    $max = 20;
+
+    if ($_SERVER['REQUEST_METHOD'] == "POST"){
+        $email      = clean($_POST['email']);
+        $password   = clean($_POST['password']);
+
+        if (empty($email)){
+            $errors[] = "Please, type in your Email address.";
+        }
+        if (empty($password)){
+            $errors[] = "Please, type in your Password.";
+        }
+
+        if(!empty($errors)){
+            foreach ($errors as $error) {
+                echo validation_errors($error);
+            }
+        } else{
+
+        }
+
+
+
+    }
+}
+
+
