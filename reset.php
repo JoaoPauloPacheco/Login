@@ -12,7 +12,6 @@ include('includes/content.php');
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-login">
@@ -51,7 +50,4 @@ include('includes/content.php');
             </div>
         </div>
     </div>
-
-
-
 <?php include('includes/footer.php') ?>

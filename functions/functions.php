@@ -150,17 +150,21 @@ function register_user($first_name, $last_name, $username, $email, $password){
 
         $sql = "INSERT INTO users (first_name, last_name, username, email, password, validation_code, active, joined)";
         $sql.=  " VALUES ('$first_name', '$last_name', '$username', '$email', '$password', '$validation_code', 0, CURRENT_TIMESTAMP)";
-        $result = query($sql);
+        query($sql);
 
         // Sending email.
         $subject = "Account Confirmation";
-        $msg = " <p><strong>Hey $first_name $last_name,</strong></p>
-                <p>We're ready to activate your account. All we need to do is make sure 
-                this is your email address.</p>
-                <a href='http://localhost/dev/login/activate.php?email=$email&code=$validation_code'><strong>Verify Address</strong></a>
-                <p>If you didn't create an account in our website, just delete this email and 
-                everything will go back to the way in was.</p>";
-        $headers = "From: noreply@mywebsite.com";
+        $msg = "Hey $first_name $last_name,
+        
+                We're ready to activate your account. All we need to do is make sure 
+                this is your email address.
+                
+                Verify email:
+                http://islamchik.com/login/activate.php?email=$email&code=$validation_code'
+                
+                If you didn't create an account in our website, just delete this email and 
+                everything will go back to the way it was.";
+        $headers = "From: noreply@islamchik.com";
         send_email($email, $subject, $msg, $headers);
         return true;
     }
@@ -179,7 +183,7 @@ function activate_user(){
             if(row_count($result) == 1) {
                 $sql2 ="UPDATE users SET active = 1, validation_code = 0 
                         WHERE email = '".escape($email)."' AND validation_code = '".escape($validation_code)."'";
-                $result2 = query($sql2);
+                query($sql2);
 
                 $text = "Your account has been activated. Please, login.";
                 set_message(validation_success($text));
@@ -240,7 +244,6 @@ function login_user($email, $password, $remember){
         } else{
             return false;
         }
-        return true;
     } else{
         return false;
     }
@@ -269,20 +272,20 @@ function recover_password(){
                 $result = query($sql);
 
                 $subject = "Reset password";
-                $message = "<p>Please, copy this code {$validation_code} and paste it into the code</p>
-                    <p>validation field by going to this page: </p>
-                    <p><a href='http://localhost/dev/login/code.php?email=$email&code=$validation_code'>Code page</a></p>";
-                $headers = "From: noreply@mywebsite.com";
-                if (send_email($email, $subject, $message, $headers)){
-                    echo validation_success("Email has been sent. Please, check your email.");
-                } else{
-                    echo validation_errors("Email could not be sent.");
-                }
+                $message = "Please, copy this code {$validation_code} and paste it into the code validation field 
+                            by clicking the link below:
+                            http://islamchik.com/login/code.php?email=$email&code=$validation_code";
+                $headers = "From: noreply@islamchik.com";
+                send_email($email, $subject, $message, $headers);
+                echo validation_success("Email has been sent. Please, check your email.");
             } else {
                 echo validation_errors("This email was not registered. Please try again.");
             }
         } else {
             redirect("index.php");
+        }
+        if(isset($_POST['submit_cancel'])){
+            redirect("login.php");
         }
     }
 } // end recover_password
@@ -319,10 +322,18 @@ function validate_code(){
 function reset_password(){
     if (isset($_COOKIE['temp_code'])) {
         if (isset($_GET['email']) && isset($_GET['code'])) {
-
             if (isset($_SESSION['token']) && isset($_POST['token'])) {
                 if ($_SESSION['token'] === $_POST['token']) {
-                    $sql = "";
+                    if ($_POST['password'] === $_POST['password-confirm']) {
+                        $password_updated = md5($_POST['password']);
+                        $sql = "UPDATE users SET password = '".escape($password_updated)."', validation_code = 0 
+                                WHERE email = '".escape($_GET['email'])."'";
+                        query($sql);
+                        set_message(validation_success("Your password has been updated, please login."));
+                        redirect("login.php");
+                    } else {
+                        validation_errors("Password fields don't match.");
+                    }
                 }
             }
         }

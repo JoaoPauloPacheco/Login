@@ -2,7 +2,6 @@
 include('includes/header.php');
 include('includes/content.php');
 ?>
-
 	<div class="row">
 		<div class="col-lg-6 col-lg-offset-3">
 			<div class="alert-placeholder">
@@ -13,7 +12,6 @@ include('includes/content.php');
 			</div>
 		</div>
 	</div>
-
 	<div class="row">
 		<div class="col-lg-6 col-md-offset-3 col-md-6 col-md-offset-3">
 			<div class="alert-placeholder">
@@ -41,7 +39,6 @@ include('includes/content.php');
 										</div>
 									</div>
 								</div>
-
 							</form>
 						</div>
 					</div>
@@ -49,5 +46,4 @@ include('includes/content.php');
 			</div>
 		</div>
 	</div>
-
 <?php include('includes/footer.php') ?>

@@ -1,22 +1,22 @@
 <?php
 include('includes/header.php');
+if (logged_in()){
+    redirect("admin.php");
+}
 include('includes/nav.php');
 include('includes/content.php');
 ?>
-
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3">
-            <?php display_message();
-
-            validate_login_form();
+            <?php
+                display_message();
+                validate_login_form();
             ?>
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-login">
-
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-6">
@@ -28,7 +28,6 @@ include('includes/content.php');
                     </div>
                     <hr>
                 </div> <!-- /panel-heading -->
-
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-12">
@@ -66,5 +65,4 @@ include('includes/content.php');
             </div> <!-- /panel -->
         </div>
     </div>
-
 <?php include('includes/footer.php') ?>

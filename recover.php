@@ -2,8 +2,6 @@
 include('includes/header.php');
 include('includes/content.php');
 ?>
-
-
 	<div class="row">
         <div class="col-lg-6 col-md-offset-3 col-md-6 col-md-offset-3">
             <div class="alert-placeholder">
@@ -24,11 +22,11 @@ include('includes/content.php');
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-lg-6 col-sm-6 col-xs-6">
-                                            <input type="submit" name="submit-cancel" id="submit-cancel"
+                                            <input type="submit" name="submit_cancel" id="submit_cancel"
                                                    class="form-control btn btn-danger" value="Cancel">
                                         </div>
                                         <div class="col-lg-6 col-sm-6 col-xs-6">
-                                            <input type="submit" name="submit-recover" id="submit-recover"
+                                            <input type="submit" name="submit_recover" id="submit_recover"
                                                    class="form-control btn btn-success" value="Send Password Reset Link">
                                         </div>
                                     </div>
@@ -41,6 +39,4 @@ include('includes/content.php');
             </div>
         </div>
     </div>
-
-
 <?php include('includes/footer.php') ?>
